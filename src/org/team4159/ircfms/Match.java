@@ -6,35 +6,36 @@ public class Match extends Thread {
 	public static final int autoTime = 15;
 	public static final int disabledTime = 5;
 	public static final int teleopTime = 105;
-	
+
 	Robot red1;
 	Robot red2;
 	Robot blue1;
 	Robot blue2;
-	
+
 	public MatchState currentState;
-	public long stateStart; //When the state started in milliseconds
+	public long stateStart; // When the state started in milliseconds
 	public boolean running = false;
-	
-	public Match(Robot red1, Robot red2, Robot blue1, Robot blue2) { //Allow for null for robot noshow
+
+	public Match(Robot red1, Robot red2, Robot blue1, Robot blue2) { // Allow
+																		// for
+																		// null
+																		// for
+																		// robot
+																		// noshow
 		this.red1 = red1;
 		this.red2 = red2;
 		this.blue1 = blue1;
 		this.blue2 = blue2;
 	}
-	
-	public void run()
-	{
+
+	public void run() {
 		running = true;
-		
+
 		setState(MatchState.AUTONOMOUS);
-		
-		while(running)
-		{
-			if(doneWithState())
-			{
-				switch(currentState)
-				{
+
+		while (running) {
+			if (doneWithState()) {
+				switch (currentState) {
 				case AUTONOMOUS:
 					setState(MatchState.DISABLED);
 					break;
@@ -46,8 +47,7 @@ public class Match extends Thread {
 					break;
 				}
 			} else {
-				switch(currentState)
-				{
+				switch (currentState) {
 				case AUTONOMOUS:
 					break;
 				case DISABLED:
@@ -58,9 +58,8 @@ public class Match extends Thread {
 			}
 		}
 	}
-	
-	private void setState(MatchState state)
-	{
+
+	private void setState(MatchState state) {
 		currentState = state;
 		stateStart = System.currentTimeMillis();
 		try {
@@ -68,13 +67,12 @@ public class Match extends Thread {
 			red2.setState(state);
 			blue1.setState(state);
 			blue2.setState(state);
-		} catch (IOException e) {}
+		} catch (IOException e) {
+		}
 	}
-	
-	private boolean doneWithState()
-	{
-		switch(currentState)
-		{
+
+	private boolean doneWithState() {
+		switch (currentState) {
 		case AUTONOMOUS:
 			return (System.currentTimeMillis() - stateStart) / 1000 > autoTime;
 		case DISABLED:
@@ -85,7 +83,7 @@ public class Match extends Thread {
 			return false;
 		}
 	}
-	
+
 	public enum MatchState {
 		AUTONOMOUS, DISABLED, TELEOP
 	}
